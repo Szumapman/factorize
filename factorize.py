@@ -29,8 +29,8 @@ def factorize_synchro(*number):
 if __name__ == "__main__":
     start_time = datetime.now()
     factorize(128128128, 255255255, 999999999, 106510600)
-    print(f"Czas wykonania: {datetime.now() - start_time}")
+    print(f"Czas wykonania w wielu procesach: {datetime.now() - start_time}")
 
     start_time = datetime.now()
     factorize_synchro(128128128, 255255255, 999999999, 106510600)
-    print(f"Czas wykonania: {datetime.now() - start_time}")
+    print(f"Czas wykonania w jednym procesie: {datetime.now() - start_time}")
