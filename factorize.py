@@ -2,6 +2,16 @@ from concurrent.futures import ProcessPoolExecutor
 from multiprocessing import cpu_count
 from math import fabs
 from datetime import datetime
+import logging
+
+
+def timer_handler(func):
+    def wrapper(*args):
+        start_time = datetime.now()
+        func(*args)
+        logging.debug(f"Execution time: {datetime.now() - start_time}")
+
+    return wrapper
 
 
 def divisible_without_remainder(number):
@@ -14,11 +24,13 @@ def divisible_without_remainder(number):
     return outcome
 
 
+@timer_handler
 def factorize(*number):
     with ProcessPoolExecutor(max_workers=cpu_count()) as executor:
         return list(executor.map(divisible_without_remainder, list(number)))
 
 
+@timer_handler
 def factorize_synchro(*number):
     numbers = list(number)
     return [divisible_without_remainder(number) for number in numbers]
@@ -27,10 +39,6 @@ def factorize_synchro(*number):
 # execution time test with slightly larger numbers than in the exercise
 # to show the difference and to give the multiprocessing solution a chance
 if __name__ == "__main__":
-    start_time = datetime.now()
+    logging.basicConfig(level=logging.DEBUG, format="%(message)s")
     factorize(128128128, 255255255, 999999999, 106510600)
-    print(f"Czas wykonania w wielu procesach: {datetime.now() - start_time}")
-
-    start_time = datetime.now()
     factorize_synchro(128128128, 255255255, 999999999, 106510600)
-    print(f"Czas wykonania w jednym procesie: {datetime.now() - start_time}")
